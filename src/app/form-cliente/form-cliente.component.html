@@ -1,0 +1,132 @@
+<div class="card text-white">
+  <div class="card-header">{{titulo}}</div>
+
+  <div class="card-body">
+
+    <div class="alert alert-danger" *ngIf="erroresBack.length > 0">
+      <ul>
+        <li *ngFor="let err of erroresBack">
+          {{err}}
+        </li>
+      </ul>
+
+    </div>
+
+
+    <form action="" #formularioVariable="ngForm">
+      <div class="form">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <input type="text" class="form-control" placeholder="id" name="id" [(ngModel)]="cliente.id">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <input type="text" class="form-control" placeholder="Nombre" name="nombre" [(ngModel)]="cliente.nombre"
+              required minlength="3" #nombreVariable="ngModel">
+
+            <!-- contenedor de validacion -->
+            <div class="alert alert-danger"
+              *ngIf="nombreVariable.invalid && (nombreVariable.dirty || nombreVariable.touched)">
+              <!-- mensaje de error solo para el required -->
+              <div *ngIf="nombreVariable.errors.required">
+                El campo nombre Requerido
+              </div>
+              <!-- mensaje de error para el tamaño de caracteres del texto -->
+              <div *ngIf="nombreVariable.errors.minlength">
+                El tamaño minino debe ser de 3 caracteres
+              </div>
+
+            </div>
+
+          </div>
+          <div class="form-group col-md-6">
+            <input type="text" class="form-control" placeholder="Apellido" name="apellido" required
+              [(ngModel)]="cliente.apellido" #apellidoVariable="ngModel" minlength="4">
+
+            <!-- contenedor de validacion -->
+            <div class="alert alert-danger"
+              *ngIf="apellidoVariable.invalid && (apellidoVariable.dirty || apellidoVariable.touched)">
+              <!-- mensaje de error solo para el required -->
+              <div *ngIf="apellidoVariable.errors.required">
+                El campo apellido Requerido
+              </div>
+              <!-- mensaje de error para el tamaño de caracteres del texto -->
+              <div *ngIf="apellidoVariable.errors.minlength">
+                El tamaño minino debe ser de 4 caracteres
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <input type="email" class="form-control" placeholder="Email" name="email" email [(ngModel)]="cliente.email"
+              required #emailVariable="ngModel">
+
+            <!-- contenedor de validacion -->
+            <div class="alert alert-danger"
+              *ngIf="emailVariable.invalid && (emailVariable.dirty || emailVariable.touched)">
+              <!-- mensaje de error solo para el required -->
+              <div *ngIf="emailVariable.errors.required">
+                El campo email Requerido
+              </div>
+              <!-- mensaje de error para el tamaño de caracteres del texto -->
+              <div *ngIf="emailVariable.errors.email">
+                El email debe tener un formarto válido
+              </div>
+            </div>
+
+
+          </div>
+          <div class="form-group col-md-6">
+            <input type="text" pattern="\d*" class="form-control" placeholder="Edad" name="edad"
+              [(ngModel)]="cliente.edad" ngModel required #edadVariable="ngModel" maxlength="3">
+
+            <!-- contenedor de validacion -->
+            <div class="alert alert-danger"
+              *ngIf="edadVariable.invalid && (edadVariable.dirty || edadVariable.touched) ">
+              <!-- mensaje de error solo para el required -->
+              <div *ngIf="edadVariable.errors.required">
+                El campo edad Requerido
+              </div>
+              <!-- mensaje de error para el tamaño de caracteres del texto -->
+              <div *ngIf="edadVariable.errors.pattern">
+                La edad solo debe contener numeros
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div class="row">
+          <!-- <div class="form-group col-md-6">
+            <input type="date" class="form-control" placeholder="dd/mm/yyyy" name="fecha_nacimiento" [(ngModel)]="cliente.fechaNacimiento"
+            required #emailVariable="ngModel" required>
+          </div> -->
+          <div class="form-group col-md-6">
+            <input matInput [matDatepicker]="picker" [max]="maxDate"  class="form-control" placeholder="dd/mm/yyyy" name="fecha_nacimiento" [(ngModel)]="cliente.fechaNacimiento">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="card-footer" *ngIf="cliente.id else crear">
+    <button class="btn btn-success" (click)="crearCliente()"
+      [disabled]="(formularioVariable.form.valid == false)?true:false">Actualizar</button>
+  </div>
+
+  <ng-template #crear>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="crearCliente()"
+        [disabled]="(formularioVariable.form.valid == false)?true:false">Crear</button>
+    </div>
+
+  </ng-template>
+</div>

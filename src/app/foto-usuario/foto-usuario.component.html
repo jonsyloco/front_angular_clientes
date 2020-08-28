@@ -1,0 +1,66 @@
+<!-- <div class="card text-white bg-dark mb-3">
+    <div class="card-header"></div>
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                   
+                </div>
+                <div class="col-sm">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div> -->
+<div class="row">
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+
+        <div class="card">
+            <img class="card-img-top img-thumbnail rounded" *ngIf="foto != '' else fotoNula"
+               
+                src="http://localhost:8080/api/obtenerFoto/{{foto}}" 
+                alt="Card image cap" 
+                width="10%" height="10%">
+
+            <ng-template #fotoNula>
+                <img class="card-img-top img-thumbnail rounded" *ngIf="cliente.rutaFoto == '' || cliente.rutaFoto == undefined"
+                    src="https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg" alt="Card image cap" width="100px"
+                    height="100px">
+            </ng-template>
+
+
+            <div class="card-body">
+                <h5 class="card-title">{{titulo}}</h5>
+                <p class="card-text">Detalles del cliente</p>
+            </div>
+            <ul *ngIf="cliente.nombre!=undefined && cliente.nombre.trim()!='' else blockTableNull "
+                class="list-group list-group-flush">
+                <li class="list-group-item">{{cliente.nombre}} {{cliente.apellido}}</li>
+                <li class="list-group-item">{{cliente.fechaNacimiento}}</li>
+                <li class="list-group-item">{{cliente.email}}</li>
+            </ul>
+            <ng-template #blockTableNull>
+                <div class="alert alert-info">No hay datos de cliente</div>
+            </ng-template>
+            <div class="card-body">
+                <!-- <a href="#" class="card-link">{{cliente.edad}}</a>
+              <a href="#" class="card-link">{{cliente.id}}</a> -->
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input (change)="fotoSeleccioanda($event)" type="file" class="custom-file-input"
+                            id="inputGroupFile04">
+                        <label class="custom-file-label" for="inputGroupFile04">Seleccionar Foto</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button (click)="guardarFoto()" [disabled]="imagenSeleccionada!=null?false:true" class="btn btn-outline-primary" type="button">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

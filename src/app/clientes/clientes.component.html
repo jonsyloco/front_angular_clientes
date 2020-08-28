@@ -1,0 +1,46 @@
+<div class="card">
+  <div class="card-header">
+    Listado de clientes
+  </div>
+  <div class="card-body">
+    <table class="table" *ngIf="listadoCl?.length > 0 else blockTableNull">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Foto</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Edad</th>
+          <th scope="col">Fecha Nacimiento</th>
+          <th scope="col">Email</th>
+          <th scope="col">Fecha Cr</th>
+          <th scope="col">Editar</th>
+          <th scope="col">Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of listadoCl; index as j">
+          <th scope="row">{{j}}</th>
+          <td><button class="btn btn-dark" [routerLink]="['/ver_foto',i.id]" routerLinkActive="router-link-active" ><i class="fa fa-user"></i></button></td>
+          <td>{{i.nombre}}</td>
+          <td>{{i.apellido}}</td>
+          <td>{{i.edad}}</td>
+          <td>{{i.fechaNacimiento | date: 'dd/MM/yyyy'}}</td>
+          <td>{{i.email}}</td>
+          <td>{{i.fechaCreacion | date: 'EEEE dd, MMMM yyyy'}}</td>
+          <!-- en el routerLink colocamos la ruta con parametro del app.module y el paramtro del id del cliente -->
+          <td><button class="btn btn-success btn-xs" [routerLink]="['/crearCliente',i.id]"
+              routerLinkActive="router-link-active"><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+          <td><button class="btn btn-danger btn-xs" routerLinkActive="router-link-active"
+              (click)="eliminarClientes(i)"><i class="fa fa-ban" aria-hidden="true"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <app-paginador *ngIf="paginacion" [reciboPaginador] = "paginacion"></app-paginador>
+    <ng-template #blockTableNull>
+      <div class="alert alert-info">No hay datos</div>
+    </ng-template>
+
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" [ngClass]="reciboPaginador.paginacion.first == true ? 'disabled': ''">
+            <a class="page-link" [routerLink]="['/clientes/pagina/',0]" tabindex="-1">Primera</a>
+        </li>
+        <li class="page-item" *ngIf="reciboPaginador.paginacion.first == false">
+            <a class="page-link" [routerLink]="['/clientes/pagina/',reciboPaginador.paginacion.number - 1]"
+                tabindex="-1">Atras</a>
+        </li>
+        <li *ngFor="let paginas of cantidadPaginas; let n = index" class="page-item"
+            [ngClass]="paginas-1 == reciboPaginador.paginacion.number?'active':''">
+
+            <a *ngIf="paginas-1 == reciboPaginador.paginacion.number" class="page-link">{{paginas}}</a>
+            <!-- <div>{{paginas-1}} ** {{paginas.number}} ,</div> -->
+            <a *ngIf="paginas-1 != reciboPaginador.paginacion.number" class="page-link"
+                [routerLink]="['/clientes/pagina/',paginas-1]">{{paginas}}</a>
+        </li>
+        <li class="page-item" *ngIf="reciboPaginador.paginacion.last == false">
+            <a class="page-link"
+                [routerLink]="['/clientes/pagina/',reciboPaginador.paginacion.number + 1]">Siguiente</a>
+        </li>
+
+        <li class="page-item" [ngClass]="reciboPaginador.paginacion.last == true?'disabled':''">
+            <a class="page-link" [routerLink]="['/clientes/pagina/',reciboPaginador.paginacion.totalPages-1]">Ultima</a>
+        </li>
+    </ul>
+</nav>

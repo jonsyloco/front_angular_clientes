@@ -1,0 +1,11 @@
+<button class="btn btn-primary" (click)="cambiarEstado()">
+    Ocultar
+</button>
+<div class="card">
+    <div class="card-header">
+        Listado de cursos
+    </div>
+    <ul class="list-group" *ngIf="habilitar ==  true">
+        <li class="list-group-item" *ngFor="let i of curso">{{i}}</li>
+    </ul>
+</div>
