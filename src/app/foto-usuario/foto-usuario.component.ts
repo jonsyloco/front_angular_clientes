@@ -48,8 +48,9 @@ export class FotoUsuarioComponent implements OnInit {
           let auxiliar = this.cliente.rutaFoto.split(".");
 
           let rutaFotoAux = auxiliar[0].split("\\");
+          console.log("ruta de foto", rutaFotoAux);
 
-          this.foto = rutaFotoAux[8];
+          this.foto = rutaFotoAux[6];
 
 
         }
@@ -66,8 +67,8 @@ export class FotoUsuarioComponent implements OnInit {
   fotoSeleccioanda(event): void {
     this.imagenSeleccionada = event.target.files[0];
     console.log("foto seleccionada", this.imagenSeleccionada);
-    if(this.imagenSeleccionada.type.indexOf('image')){
-      swal('Error!',"Los formatos admitidos son JPG, PNG, JPEG","error");
+    if (this.imagenSeleccionada.type.indexOf('image')) {
+      swal('Error!', "Los formatos admitidos son JPG, PNG, JPEG", "error");
       this.imagenSeleccionada = null;
       return;
 
@@ -77,10 +78,10 @@ export class FotoUsuarioComponent implements OnInit {
 
   guardarFoto(): void {
     if (this.imagenSeleccionada == undefined || this.fotoSeleccioanda == null) {
-      swal('Error!',"Debe seleccionar una foto","error");
+      swal('Error!', "Debe seleccionar una foto", "error");
       return;
     } else {
-      
+
     }
 
 
