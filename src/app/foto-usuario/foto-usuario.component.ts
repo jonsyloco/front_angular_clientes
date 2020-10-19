@@ -45,12 +45,15 @@ export class FotoUsuarioComponent implements OnInit {
         console.log("cliente encontrado->", response);
         this.cliente = response;
         if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
-          let auxiliar = this.cliente.rutaFoto.split(".");
+          let auxiliar = this.cliente.rutaFoto.split(".jpg");
 
+          console.log("la ruta original",auxiliar);
           let rutaFotoAux = auxiliar[0].split("\\");
           console.log("ruta de foto", rutaFotoAux);
 
           this.foto = rutaFotoAux[6];
+          console.log("la foto",this.foto);
+          
 
 
         }
