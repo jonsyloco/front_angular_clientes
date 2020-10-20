@@ -4,6 +4,7 @@ import { ClienteService } from '../service/cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from "sweetalert2";
 import { error } from 'protractor';
+import { HttpEventType } from '@angular/common/http';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class FotoUsuarioComponent implements OnInit {
   titulo: string;
   imagenSeleccionada: File;
   foto: string;
+  progreso: number;
 
   constructor(private servicio: ClienteService,
     private rutas: Router,
@@ -24,6 +26,7 @@ export class FotoUsuarioComponent implements OnInit {
     this.titulo = 'Foto del cliente';
     this.cliente = new Cliente();
     this.foto = '';
+    this.progreso=0;
   }
 
   ngOnInit(): void {
@@ -46,6 +49,7 @@ export class FotoUsuarioComponent implements OnInit {
         this.cliente = response;
         if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
           let auxiliar = this.cliente.rutaFoto.split(".jpg");
+          //.join(",").split(".png").join(",").split(".jpeg");
 
           console.log("la ruta original",auxiliar);
           let rutaFotoAux = auxiliar[0].split("\\");
@@ -69,6 +73,7 @@ export class FotoUsuarioComponent implements OnInit {
 
   fotoSeleccioanda(event): void {
     this.imagenSeleccionada = event.target.files[0];
+    this.progreso = 0 ;
     console.log("foto seleccionada", this.imagenSeleccionada);
     if (this.imagenSeleccionada.type.indexOf('image')) {
       swal('Error!', "Los formatos admitidos son JPG, PNG, JPEG", "error");
@@ -90,9 +95,19 @@ export class FotoUsuarioComponent implements OnInit {
 
     this.servicio.subirFoto(this.imagenSeleccionada, this.cliente.id).subscribe(
       response => {
-        console.log("respuesta servicio ", response.mensaje);
+        console.log("respuesta servicio ", response.type);
 
-        swal('Exito!', response.mensaje, 'success'); //respueta desde el back
+        if(response.type === HttpEventType.UploadProgress){
+          this.progreso = Math.round(100 * response.loaded/response.total); //se calcula el porcentaje de subido
+          console.log("respuesta del servicio->",response);
+          
+        }
+        if(response.type === HttpEventType.Response){
+          swal('Exito!', response.body['mensaje'], 'success'); //respueta desde el back
+          console.log("cuerpo de la respuesta: ",response.body);
+          
+        }
+        
       },
       error => {
         console.log(error);

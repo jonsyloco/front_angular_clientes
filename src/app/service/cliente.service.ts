@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { formatDate} from "@angular/common";
 import { Cliente } from '../clientes/cliente';
 import { Observable, of, throwError } from "rxjs"; //throwError no sirve para capturar las excepciones generadas por el  status HTTP
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { map, catchError } from "rxjs/operators"; //catchError, es para obtener los errores y el status HTTP
 
 
@@ -120,11 +120,18 @@ export class ClienteService {
   }
 
 
+  /** Metodo sin barra de progreso que sube la foto correctamente
+   * 
   subirFoto(foto: File,id: string): Observable<any>{
     let formData = new FormData(); //para el manejo de archivos y enctype/multipart
     formData.append("archivo",foto);
     formData.append("id",id);
-    return this.http.post(this.urlEndpoint+'subirFoto/',formData).pipe(
+
+    const req = new HttpRequest('POST', this.urlEndpoint+'subirFoto/',formData, {
+      reportProgress: true
+    });
+    
+    return this.http.request(req).pipe(
       map(response =>{
         return response;
       }),
@@ -135,6 +142,19 @@ export class ClienteService {
       })
     );
 
+  }**/
+
+  /**Metodo para la barra de progreso y subir la foto */
+  subirFoto(foto: File,id: string): Observable<HttpEvent<{}>>{
+    let formData = new FormData(); //para el manejo de archivos y enctype/multipart
+    formData.append("archivo",foto);
+    formData.append("id",id);
+
+    const req = new HttpRequest('POST', this.urlEndpoint+'subirFoto/',formData, {
+      reportProgress: true
+    });
+    
+    return this.http.request(req);
 
   }
 }

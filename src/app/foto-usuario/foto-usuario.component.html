@@ -60,6 +60,11 @@
                         <button (click)="guardarFoto()" [disabled]="imagenSeleccionada!=null?false:true" class="btn btn-outline-primary" type="button">Guardar</button>
                     </div>
                 </div>
+                <div class="progress" *ngIf="progreso > 0">
+                    <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{width: progreso + '%'}" attr.aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+                        {{progreso}} %
+                    </div>
+                  </div>
             </div>
         </div>
     </div>
