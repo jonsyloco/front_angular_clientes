@@ -14,7 +14,7 @@ import { FotoUsuarioModalService } from '../service/foto-usuario-modal.service';
   styleUrls: ['./foto-usuario.component.css']
 })
 export class FotoUsuarioComponent implements OnInit {
-  
+
   @Input() cliente: Cliente;
   titulo: string;
   imagenSeleccionada: File;
@@ -29,14 +29,14 @@ export class FotoUsuarioComponent implements OnInit {
     this.titulo = 'Foto del cliente';
     // this.cliente = new Cliente();
     this.foto = '';
-    this.progreso=0;
-    this.estadoModal = this.fotoModalService.modal;    
-      
-    
+    this.progreso = 0;
+    this.estadoModal = this.fotoModalService.modal;
+
+
   }
 
   ngOnInit(): void {
-    console.log("cliente",this.cliente);
+    console.log("cliente", this.cliente);
     // this.traerCliente();
     // this.activateRoute.params.subscribe(parametrosUrl => {
     //   let id: string = parametrosUrl['id'];
@@ -59,17 +59,17 @@ export class FotoUsuarioComponent implements OnInit {
           let auxiliar = this.cliente.rutaFoto.split(".jpg");
           //.join(",").split(".png").join(",").split(".jpeg");
 
-          console.log("la ruta original",auxiliar);
+          console.log("la ruta original", auxiliar);
           let rutaFotoAux = auxiliar[0].split("\\");
           console.log("ruta de foto", rutaFotoAux);
 
           this.foto = rutaFotoAux[6];
-          console.log("la foto",this.foto);
-          
+          console.log("la foto", this.foto);
 
 
-        }else{
-          this.foto='';
+
+        } else {
+          this.foto = '';
         }
       },
       error => {
@@ -80,20 +80,20 @@ export class FotoUsuarioComponent implements OnInit {
 
   }
 
-  traerCliente(): void{
-    console.log("cliente->",this.cliente);
-    
+  traerCliente(): void {
+    console.log("cliente->", this.cliente);
+
     if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
       let auxiliar = this.cliente.rutaFoto.split(".jpg");
       //.join(",").split(".png").join(",").split(".jpeg");
 
-      console.log("la ruta original",auxiliar);
+      console.log("la ruta original", auxiliar);
       let rutaFotoAux = auxiliar[0].split("\\");
       console.log("ruta de foto", rutaFotoAux);
 
       this.foto = rutaFotoAux[6];
-      console.log("la foto",this.foto);
-      
+      console.log("la foto", this.foto);
+
 
 
     }
@@ -102,7 +102,7 @@ export class FotoUsuarioComponent implements OnInit {
 
   fotoSeleccioanda(event): void {
     this.imagenSeleccionada = event.target.files[0];
-    this.progreso = 0 ;
+    this.progreso = 0;
     console.log("foto seleccionada", this.imagenSeleccionada);
     if (this.imagenSeleccionada.type.indexOf('image')) {
       swal('Error!', "Los formatos admitidos son JPG, PNG, JPEG", "error");
@@ -126,17 +126,28 @@ export class FotoUsuarioComponent implements OnInit {
       response => {
         console.log("respuesta servicio ", response.type);
 
-        if(response.type === HttpEventType.UploadProgress){
-          this.progreso = Math.round(100 * response.loaded/response.total); //se calcula el porcentaje de subido
-          console.log("respuesta del servicio->",response);
-          
+        if (response.type === HttpEventType.UploadProgress) {
+          this.progreso = Math.round(100 * response.loaded / response.total); //se calcula el porcentaje de subido
+          console.log("respuesta del servicio->", response);
+
         }
-        if(response.type === HttpEventType.Response){
+        if (response.type === HttpEventType.Response) {
           swal('Exito!', response.body['mensaje'], 'success'); //respueta desde el back
-          console.log("cuerpo de la respuesta: ",response.body);
-          
+
+          /* colocando la foto en la variable global foto */
+          this.cliente.rutaFoto = response.body['resultado']['rutaFoto'];
+          let auxiliar = this.cliente.rutaFoto.split(".jpg");          
+
+          console.log("la ruta original", auxiliar);
+          let rutaFotoAux = auxiliar[0].split("\\");
+          console.log("ruta de foto", rutaFotoAux);
+
+          this.foto = rutaFotoAux[6];
+          console.log("la foto", this.foto);
+          console.log("cuerpo de la respuesta: ", response.body);
+
         }
-        
+
       },
       error => {
         console.log(error);
@@ -147,20 +158,20 @@ export class FotoUsuarioComponent implements OnInit {
   }
 
   /**cerrando modal */
-  cerrarModal(): void{
+  cerrarModal(): void {
     this.fotoModalService.cerraModal();
     // this.cliente = null;
-    this.progreso=0;
+    this.progreso = 0;
     // this.foto='';
-    this.estadoModal=this.fotoModalService.modal;
-  
+    this.estadoModal = this.fotoModalService.modal;
+
   }
 
   /**este medoto se hizo para que cuando cambie el parametro de cliente, se cargue la imagen en el div  */
-  ngOnChanges(changes: SimpleChanges) {        
-    this.traerClientePorId(this.cliente.id);   
-    
-}
+  ngOnChanges(changes: SimpleChanges) {
+    this.traerClientePorId(this.cliente.id);
+
+  }
 
 
 }
