@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Cliente } from '../clientes/cliente';
 import { ClienteService } from '../service/cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from "sweetalert2";
 import { error } from 'protractor';
 import { HttpEventType } from '@angular/common/http';
+import { FotoUsuarioModalService } from '../service/foto-usuario-modal.service';
 
 
 @Component({
@@ -13,31 +14,38 @@ import { HttpEventType } from '@angular/common/http';
   styleUrls: ['./foto-usuario.component.css']
 })
 export class FotoUsuarioComponent implements OnInit {
-
-  cliente: Cliente;
+  
+  @Input() cliente: Cliente;
   titulo: string;
   imagenSeleccionada: File;
   foto: string;
   progreso: number;
+  estadoModal: boolean;
 
   constructor(private servicio: ClienteService,
     private rutas: Router,
+    public fotoModalService: FotoUsuarioModalService,
     private activateRoute: ActivatedRoute) {
     this.titulo = 'Foto del cliente';
-    this.cliente = new Cliente();
+    // this.cliente = new Cliente();
     this.foto = '';
     this.progreso=0;
+    this.estadoModal = this.fotoModalService.modal;    
+      
+    
   }
 
   ngOnInit(): void {
-    this.activateRoute.params.subscribe(parametrosUrl => {
-      let id: string = parametrosUrl['id'];
-      if (id) { //si el ID existe
-        this.traerClientePorId(id);
-      }
+    console.log("cliente",this.cliente);
+    // this.traerCliente();
+    // this.activateRoute.params.subscribe(parametrosUrl => {
+    //   let id: string = parametrosUrl['id'];
+    //   if (id) { //si el ID existe
+    //     this.traerClientePorId(id);
+    //   }
 
-    }
-    );
+    // }
+    // );
   }
 
 
@@ -60,6 +68,8 @@ export class FotoUsuarioComponent implements OnInit {
           
 
 
+        }else{
+          this.foto='';
         }
       },
       error => {
@@ -68,6 +78,25 @@ export class FotoUsuarioComponent implements OnInit {
         this.rutas.navigate(["/clientes"]);
       });
 
+  }
+
+  traerCliente(): void{
+    console.log("cliente->",this.cliente);
+    
+    if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
+      let auxiliar = this.cliente.rutaFoto.split(".jpg");
+      //.join(",").split(".png").join(",").split(".jpeg");
+
+      console.log("la ruta original",auxiliar);
+      let rutaFotoAux = auxiliar[0].split("\\");
+      console.log("ruta de foto", rutaFotoAux);
+
+      this.foto = rutaFotoAux[6];
+      console.log("la foto",this.foto);
+      
+
+
+    }
   }
 
 
@@ -116,5 +145,22 @@ export class FotoUsuarioComponent implements OnInit {
       });
 
   }
+
+  /**cerrando modal */
+  cerrarModal(): void{
+    this.fotoModalService.cerraModal();
+    // this.cliente = null;
+    this.progreso=0;
+    // this.foto='';
+    this.estadoModal=this.fotoModalService.modal;
+  
+  }
+
+  /**este medoto se hizo para que cuando cambie el parametro de cliente, se cargue la imagen en el div  */
+  ngOnChanges(changes: SimpleChanges) {        
+    this.traerClientePorId(this.cliente.id);   
+    
+}
+
 
 }

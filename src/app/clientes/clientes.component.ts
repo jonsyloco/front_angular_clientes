@@ -3,6 +3,7 @@ import { Cliente } from './cliente';
 import { ClienteService } from '../service/cliente.service';
 import swal from "sweetalert2/dist/sweetalert2.js";
 import { Router, ActivatedRoute } from '@angular/router';
+import { FotoUsuarioModalService } from '../service/foto-usuario-modal.service';
 
 
 
@@ -16,13 +17,16 @@ export class ClientesComponent implements OnInit {
   listadoCl: Cliente[];
   pagina: string;
   paginacion: any;
+  clienteSeleccionado: Cliente;
 
 
 
   constructor(private clienteService: ClienteService,
+    private fotoModalService: FotoUsuarioModalService,
     private rutas: Router,
     private activateRoute: ActivatedRoute) {
       this.pagina='0';
+      //this.clienteSeleccionado = new Cliente();
   }
 
   ngOnInit(): void {
@@ -88,5 +92,13 @@ export class ClientesComponent implements OnInit {
         }
       );
   }
+
+  abrirModal(cliente: Cliente): void{
+    this.clienteSeleccionado = cliente;
+    console.log("cliente desde clientes.components->",this.clienteSeleccionado);    
+    this.fotoModalService.abrirModal();
+    
+  }
+ 
 
 }

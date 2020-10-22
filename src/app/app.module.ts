@@ -35,7 +35,7 @@ const routes: Routes = [
   { path: 'clientes/pagina/:page', component: ClientesComponent },
   { path: 'crearCliente', component: FormClienteComponent },
   { path: 'crearCliente/:id', component: FormClienteComponent }, // este parametro :id se obtiene en el metodo cargarCliente con ActivateRoute
-  { path: 'ver_foto/:id', component: FotoUsuarioComponent} // este parametro :id se obtiene en el metodo cargarCliente con ActivateRoute
+  // { path: 'ver_foto/:id', component: FotoUsuarioComponent} // este parametro :id se obtiene en el metodo cargarCliente con ActivateRoute, es para cargar la foto
 
 ];
 /**----------------------- */
