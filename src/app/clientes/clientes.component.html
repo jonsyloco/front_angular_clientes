@@ -22,7 +22,23 @@
         <tr *ngFor="let i of listadoCl; index as j">
           <th scope="row">{{j}}</th>
           <!-- <td><button class="btn btn-dark" [routerLink]="['/ver_foto',i.id]" routerLinkActive="router-link-active" ><i class="fa fa-user"></i></button></td> -->
-          <td><button class="btn btn-dark"  routerLinkActive="router-link-active" (click)="abrirModal(i)" ><i class="fa fa-user"></i></button></td>
+          <!-- <td><button class="btn btn-dark"  routerLinkActive="router-link-active" (click)="abrirModal(i)" ><i class="fa fa-user"></i></button></td> -->
+          <td>
+            <img class="card-img-top img-thumbnail rounded img-fluid"
+                                    *ngIf="i.nombreFoto != '' else fotoNula"
+                                    (click)="abrirModal(i)"
+                                    src="http://localhost:8080/api/obtenerFoto/{{i.nombreFoto}}" alt="Card image cap"
+                                    style="width: 64px; cursor: pointer;">
+
+                                    <ng-template #fotoNula>
+                                      <img class="card-img-top img-thumbnail rounded"
+                                          *ngIf="i.nombreFoto == '' || i.nombreFoto == undefined"
+                                          (click)="abrirModal(i)"
+                                          src="http://localhost:8080/imagenes/no-usuario.svg"
+                                          style="width: 64px; cursor: pointer;"
+                                          alt="Sin Foto">
+                                  </ng-template>
+          </td>
           <td>{{i.nombre}}</td>
           <td>{{i.apellido}}</td>
           <td>{{i.edad}}</td>

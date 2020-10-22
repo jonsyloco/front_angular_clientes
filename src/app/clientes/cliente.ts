@@ -7,4 +7,5 @@ export class Cliente {
     email: string;
     fechaCreacion: string;
     rutaFoto: string;
+    nombreFoto: string;
 }

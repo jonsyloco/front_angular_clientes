@@ -50,7 +50,7 @@ export class ClientesComponent implements OnInit {
         this.listadoCl = clienteService['cliente'];
         console.log("datos de clientes", this.listadoCl);
       }
-    );
+    )
 
   }
 

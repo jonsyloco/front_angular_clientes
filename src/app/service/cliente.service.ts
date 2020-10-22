@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { formatDate} from "@angular/common";
+import { formatDate } from "@angular/common";
 import { Cliente } from '../clientes/cliente';
 import { Observable, of, throwError } from "rxjs"; //throwError no sirve para capturar las excepciones generadas por el  status HTTP
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from "@angular/common/http";
@@ -23,15 +23,22 @@ export class ClienteService {
   // }
 
   getClientes(pagina: string): Observable<Cliente[]> {
-    return this.http.get(this.urlEndpoint + 'clientes/pagina/'+pagina).pipe(
-      map((dato: any) => {        
+    return this.http.get(this.urlEndpoint + 'clientes/pagina/' + pagina).pipe(
+      map((dato: any) => {
         let cliente = dato.content as Cliente[];
-        let respuesta: any= {} ;
+        let respuesta: any = {};
 
-         cliente.map(valor => {
+        cliente.map(valor => {
           console.log("nombre_cliente", valor.nombre);
           valor.nombre = valor.nombre.toUpperCase();
           valor.apellido = valor.apellido.toUpperCase();
+          valor.nombreFoto = '';
+
+          if (valor.rutaFoto != null && valor.rutaFoto != undefined && valor.rutaFoto != "") {
+            let auxiliar = valor.rutaFoto.split(".jpg");
+            let rutaFotoAux = auxiliar[0].split("\\");
+            valor.nombreFoto = rutaFotoAux[6]
+          }
           // valor.fechaCreacion = formatDate(valor.fechaCreacion, 'dd/MM/yyyy', 'en-US');
           // valor.fechaCreacion = formatDate(valor.fechaCreacion, 'EEEE dd, MMMM yyyy', 'es-US');
           return valor;
@@ -41,14 +48,14 @@ export class ClienteService {
           "cliente": cliente,
           "paginacion": dato
         };
-        
+
         return respuesta;
 
 
       }),
-      catchError( ex => {
+      catchError(ex => {
         console.log("mensaje de error en el service -> ", ex);
-        ex.error.mensaje;          
+        ex.error.mensaje;
         return throwError(ex);
       })
     )
@@ -57,14 +64,14 @@ export class ClienteService {
   /**Otra manera de hacerlo es no debolviendo un observable de tipo any, si no trabajando el objeto con map ....  */
   CrearCliente(cliente: Cliente): Observable<Cliente> {
     return this.http.post<any>(this.urlEndpoint + 'guardarCliente', cliente, { headers: this.httpHeaders }).pipe(
-      map((data: any) => {    
-        console.log("despues de crear", data);    
+      map((data: any) => {
+        console.log("despues de crear", data);
         let cliente = data.resultado as Cliente;
         return cliente;
       }),
-      catchError( ex => {
+      catchError(ex => {
         console.log("mensaje de error en el service -> ", ex);
-        ex.error.mensaje;          
+        ex.error.mensaje;
         return throwError(ex);
       })
     )
@@ -77,9 +84,9 @@ export class ClienteService {
         // let cliente = data as Cliente;
         return data;
       }),
-      catchError( ex => {
+      catchError(ex => {
         console.log("mensaje de error en el service -> ", ex);
-        ex.error.mensaje;          
+        ex.error.mensaje;
         return throwError(ex);
       })
     )
@@ -91,32 +98,32 @@ export class ClienteService {
     return this.http.put<any>(this.urlEndpoint + 'actualizarCliente', cliente, { headers: this.httpHeaders })
       .pipe(
         map(data => {
-          
+
           // let cliente = data as Cliente;
           return data;
         }),
-        catchError( ex => {
+        catchError(ex => {
           console.log("mensaje de error en el service -> ", ex);
-          ex.error.mensaje;          
+          ex.error.mensaje;
           return throwError(ex);
         })
       );
   }
 
-  eliminarCliente(cliente: Cliente): Observable<any>{
-    return this.http.delete(this.urlEndpoint+ 'eliminarCliente/'+ cliente.id,{headers: this.httpHeaders})
-    .pipe(
-      map(data =>{
-        // let cliente = data as Cliente;
+  eliminarCliente(cliente: Cliente): Observable<any> {
+    return this.http.delete(this.urlEndpoint + 'eliminarCliente/' + cliente.id, { headers: this.httpHeaders })
+      .pipe(
+        map(data => {
+          // let cliente = data as Cliente;
 
-        return data;
-      }),
-      catchError( ex => {
-        console.log("mensaje de error en el service -> ", ex);
-        ex.error.mensaje;          
-        return throwError(ex);
-      })
-    );
+          return data;
+        }),
+        catchError(ex => {
+          console.log("mensaje de error en el service -> ", ex);
+          ex.error.mensaje;
+          return throwError(ex);
+        })
+      );
   }
 
 
@@ -145,15 +152,15 @@ export class ClienteService {
   }**/
 
   /**Metodo para la barra de progreso y subir la foto */
-  subirFoto(foto: File,id: string): Observable<HttpEvent<{}>>{
+  subirFoto(foto: File, id: string): Observable<HttpEvent<{}>> {
     let formData = new FormData(); //para el manejo de archivos y enctype/multipart
-    formData.append("archivo",foto);
-    formData.append("id",id);
+    formData.append("archivo", foto);
+    formData.append("id", id);
 
-    const req = new HttpRequest('POST', this.urlEndpoint+'subirFoto/',formData, {
+    const req = new HttpRequest('POST', this.urlEndpoint + 'subirFoto/', formData, {
       reportProgress: true
     });
-    
+
     return this.http.request(req);
 
   }
