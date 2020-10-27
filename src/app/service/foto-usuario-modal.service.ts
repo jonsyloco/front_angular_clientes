@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+
 
 /**Clase servicio dedicada al manejo del modal para la foto de usuario */
 
@@ -8,15 +9,25 @@ import { Injectable } from '@angular/core';
 export class FotoUsuarioModalService {
 
   modal: boolean;
+
+  private _notificarSubirArchivo = new EventEmitter<any>();
+
+
+
   constructor() {
     this.modal = false;
   }
 
-  abrirModal(){
+  get notificarSubirArchivo(): EventEmitter<any> {
+    return this._notificarSubirArchivo;
+  }
+
+
+  abrirModal() {
     this.modal = true;
   }
-  
-  cerraModal(){
+
+  cerraModal() {
     this.modal = false;
   }
 }

@@ -6,6 +6,7 @@ import swal from "sweetalert2";
 import { error } from 'protractor';
 import { HttpEventType } from '@angular/common/http';
 import { FotoUsuarioModalService } from '../service/foto-usuario-modal.service';
+import { HelperService } from '../service/helper.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class FotoUsuarioComponent implements OnInit {
 
   constructor(private servicio: ClienteService,
     private rutas: Router,
+    private helper: HelperService,
     public fotoModalService: FotoUsuarioModalService,
     private activateRoute: ActivatedRoute) {
     this.titulo = 'Foto del cliente';
@@ -56,15 +58,16 @@ export class FotoUsuarioComponent implements OnInit {
         console.log("cliente encontrado->", response);
         this.cliente = response;
         if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
-          let auxiliar = this.cliente.rutaFoto.split(".jpg");
-          //.join(",").split(".png").join(",").split(".jpeg");
+          // let auxiliar = this.cliente.rutaFoto.split(".jpg");
+          // //.join(",").split(".png").join(",").split(".jpeg");
 
-          console.log("la ruta original", auxiliar);
-          let rutaFotoAux = auxiliar[0].split("\\");
-          console.log("ruta de foto", rutaFotoAux);
+          // console.log("la ruta original", auxiliar);
+          // let rutaFotoAux = auxiliar[0].split("\\");
+          // console.log("ruta de foto", rutaFotoAux);
 
-          this.foto = rutaFotoAux[6];
-          console.log("la foto", this.foto);
+          // this.foto = rutaFotoAux[6];
+          // console.log("la foto", this.foto);
+          this.foto = this.helper.obtenerRutaFoto(this.cliente);
 
 
 
@@ -83,20 +86,22 @@ export class FotoUsuarioComponent implements OnInit {
   traerCliente(): void {
     console.log("cliente->", this.cliente);
 
-    if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
-      let auxiliar = this.cliente.rutaFoto.split(".jpg");
-      //.join(",").split(".png").join(",").split(".jpeg");
 
-      console.log("la ruta original", auxiliar);
-      let rutaFotoAux = auxiliar[0].split("\\");
-      console.log("ruta de foto", rutaFotoAux);
+    // if (this.cliente.rutaFoto != null && this.cliente.rutaFoto != '' && this.cliente.rutaFoto != undefined) {
+    //   let auxiliar = this.cliente.rutaFoto.split(".jpg");
+    //   //.join(",").split(".png").join(",").split(".jpeg");
 
-      this.foto = rutaFotoAux[6];
-      console.log("la foto", this.foto);
+    //   console.log("la ruta original", auxiliar);
+    //   let rutaFotoAux = auxiliar[0].split("\\");
+    //   console.log("ruta de foto", rutaFotoAux);
+
+    //   this.foto = rutaFotoAux[6];
+    //   console.log("la foto", this.foto);
 
 
 
-    }
+    // }
+    this.foto = this.helper.obtenerRutaFoto(this.cliente);
   }
 
 
@@ -145,6 +150,12 @@ export class FotoUsuarioComponent implements OnInit {
           this.foto = rutaFotoAux[6];
           console.log("la foto", this.foto);
           console.log("cuerpo de la respuesta: ", response.body);
+
+          /**eventEmitter desde el fotoUsuarioModal **/
+          let cliente: Cliente = response.body['resultado'];
+          console.log("cliente a emitir",cliente);          
+          this.fotoModalService.notificarSubirArchivo.emit(cliente);
+
 
         }
 

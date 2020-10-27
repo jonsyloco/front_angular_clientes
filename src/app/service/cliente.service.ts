@@ -4,6 +4,7 @@ import { Cliente } from '../clientes/cliente';
 import { Observable, of, throwError } from "rxjs"; //throwError no sirve para capturar las excepciones generadas por el  status HTTP
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { map, catchError } from "rxjs/operators"; //catchError, es para obtener los errores y el status HTTP
+import { HelperService } from './helper.service';
 
 
 @Injectable({
@@ -14,7 +15,8 @@ export class ClienteService {
   urlEndpoint: string = 'http://localhost:8080/api/';
   httpHeaders: HttpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private helper: HelperService) {
 
   }
 
@@ -33,12 +35,8 @@ export class ClienteService {
           valor.nombre = valor.nombre.toUpperCase();
           valor.apellido = valor.apellido.toUpperCase();
           valor.nombreFoto = '';
+          valor.nombreFoto = this.helper.obtenerRutaFoto(valor);
 
-          if (valor.rutaFoto != null && valor.rutaFoto != undefined && valor.rutaFoto != "") {
-            let auxiliar = valor.rutaFoto.split(".jpg");
-            let rutaFotoAux = auxiliar[0].split("\\");
-            valor.nombreFoto = rutaFotoAux[6]
-          }
           // valor.fechaCreacion = formatDate(valor.fechaCreacion, 'dd/MM/yyyy', 'en-US');
           // valor.fechaCreacion = formatDate(valor.fechaCreacion, 'EEEE dd, MMMM yyyy', 'es-US');
           return valor;
