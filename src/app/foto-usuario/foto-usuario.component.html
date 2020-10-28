@@ -32,9 +32,10 @@
                                 </div>
                                 <ul *ngIf="cliente.nombre!=undefined && cliente.nombre.trim()!='' else blockTableNull "
                                     class="list-group list-group-flush">
-                                    <li class="list-group-item">{{cliente.nombre}} {{cliente.apellido}}</li>
-                                    <li class="list-group-item">{{cliente.fechaNacimiento}}</li>
-                                    <li class="list-group-item">{{cliente.email}}</li>
+                                    <li class="list-group-item">Nombre: {{cliente.nombre}} {{cliente.apellido}}</li>
+                                    <li class="list-group-item">Nacimiento: {{cliente.fechaNacimiento}}</li>
+                                    <li class="list-group-item">region: {{cliente.region.nombre}}</li>                                    
+                                    <li class="list-group-item">Email: {{cliente.email}}</li>
                                 </ul>
                                 <ng-template #blockTableNull>
                                     <div class="alert alert-info">No hay datos de cliente</div>

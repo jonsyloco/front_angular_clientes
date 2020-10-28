@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from '../clientes/cliente';
+import { Region } from '../clientes/region';
 import { ClienteService } from '../service/cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -17,6 +18,7 @@ export class FormClienteComponent implements OnInit {
   btnNombre: string = 'Crear';
   erroresBack: string[] = [];
   maxDate: Date = new Date();
+  regiones: Region;
 
 
   constructor(private clienteService: ClienteService,
@@ -26,16 +28,33 @@ export class FormClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.cargarCliente(); // detecta un parametro en la URL y lo carga en al interfaz
+    this.cargarRegiones();
+
+  }
+
+  cargarRegiones(): void {
+    this.clienteService.obtenerRegiones().subscribe(
+      response => {
+        console.log("respuesta desde el componente para el select de regiones", response);
+        this.regiones = response;
+
+
+      },
+      error => {
+        console.log("Error obteniendo las regiones", error);
+        return;
+      }
+    );
 
   }
 
   crearCliente(): void {
-    
-    if(this.cliente.id){ /**actualizar cliente */   
+
+    if (this.cliente.id) { /**actualizar cliente */
       this.actualizarCliente(this.cliente);
-      return;      
+      return;
     }
 
     this.clienteService.CrearCliente(this.cliente).subscribe(
@@ -46,11 +65,11 @@ export class FormClienteComponent implements OnInit {
         this.rutas.navigate(['/clientes']);
       },
       error => {
-        
-        if(error.status == 400){ // si el error proviene de un BAD_REQUEST desde el back, es porque son validaciones de campos
+
+        if (error.status == 400) { // si el error proviene de un BAD_REQUEST desde el back, es porque son validaciones de campos
           console.log("error de campos", error);
           this.erroresBack = error.error.resultado;
-          
+
           return;
 
         }
@@ -59,7 +78,7 @@ export class FormClienteComponent implements OnInit {
 
 
 
-        console.log(error);        
+        console.log(error);
         swal('Error!', error.error.mensaje, 'error'); //respueta desde el back
         return;
       }
@@ -76,7 +95,7 @@ export class FormClienteComponent implements OnInit {
         this.cliente = response;
       },
       error => {
-        console.log(error);        
+        console.log(error);
         swal('Error!', error.error.mensaje, 'error'); //respueta desde el back
         this.rutas.navigate(["/clientes"]);
       });
@@ -98,32 +117,49 @@ export class FormClienteComponent implements OnInit {
   }
 
 
-  actualizarCliente(cliente: Cliente): void{
+  actualizarCliente(cliente: Cliente): void {
     this.clienteService.actualizarCliente(cliente)
-    .subscribe(
-      response => {
-        console.log("cliente actualizado",response);
-        swal('Cliente actualizado', 'cliente ' + response.resultado.nombre + ' Actualizado con éxito!', 'success');
-        //despues de guardar, redirigimos al listado de clientes
-        this.rutas.navigate(['/clientes']);
-                
-      },
-      error => {
-        
-        
-        if(error.status == 400){ // si el error proviene de un BAD_REQUEST desde el back, es porque son validaciones de campos
-          console.log("error de campos", error);
-          this.erroresBack = error.error.resultado;
-          
+      .subscribe(
+        response => {
+          console.log("cliente actualizado", response);
+          swal('Cliente actualizado', 'cliente ' + response.resultado.nombre + ' Actualizado con éxito!', 'success');
+          //despues de guardar, redirigimos al listado de clientes
+          this.rutas.navigate(['/clientes']);
+
+        },
+        error => {
+
+
+          if (error.status == 400) { // si el error proviene de un BAD_REQUEST desde el back, es porque son validaciones de campos
+            console.log("error de campos", error);
+            this.erroresBack = error.error.resultado;
+
+            return;
+
+          }
+
+          console.log(error);
+          swal('Error!', error.error.mensaje, 'error'); //respueta desde el back
           return;
-
         }
+      );
 
-        console.log(error);        
-        swal('Error!', error.error.mensaje, 'error'); //respueta desde el back
-        return;
-      }
-    );
+  }
+
+  comparaRegion(region1: Region, region2: Region): boolean {
+
+    if (region1 == undefined && region2 == undefined) {
+      return true;
+    }
+
+    if (region1 == null || region2 == null) {
+      return false;
+    }
+    if (region2.id === region1.id) {
+      return true;
+    } else {
+      return false;
+    }
 
   }
 

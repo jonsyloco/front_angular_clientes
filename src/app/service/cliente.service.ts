@@ -5,6 +5,7 @@ import { Observable, of, throwError } from "rxjs"; //throwError no sirve para ca
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { map, catchError } from "rxjs/operators"; //catchError, es para obtener los errores y el status HTTP
 import { HelperService } from './helper.service';
+import { Region } from '../clientes/region';
 
 
 @Injectable({
@@ -161,5 +162,25 @@ export class ClienteService {
 
     return this.http.request(req);
 
+  }
+
+
+  obtenerRegiones(): Observable<Region>{
+    return this.http.get<any>(this.urlEndpoint + 'clientes/regiones').pipe(
+      map((region) => {
+        let region_: Region[] = region as Region[];
+        region_.map(data =>{
+          console.log("datos de la region",data);
+          return data;
+
+        });
+        return region ;
+      }),
+      catchError(ex => {
+        console.log("Error obteniendo las regiones -> ", ex);
+        ex.error.mensaje;
+        return throwError(ex);
+      })
+    )    
   }
 }

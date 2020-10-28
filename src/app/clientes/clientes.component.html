@@ -13,6 +13,7 @@
           <th scope="col">Edad</th>
           <th scope="col">Fecha Nacimiento</th>
           <th scope="col">Email</th>
+          <th scope="col">Region</th>
           <th scope="col">Fecha Cr</th>
           <th scope="col">Editar</th>
           <th scope="col">Eliminar</th>
@@ -44,6 +45,7 @@
           <td>{{i.edad}}</td>
           <td>{{i.fechaNacimiento | date: 'dd/MM/yyyy'}}</td>
           <td>{{i.email}}</td>
+          <td>{{i.region.nombre}}</td>
           <td>{{i.fechaCreacion | date: 'EEEE dd, MMMM yyyy'}}</td>
           <!-- en el routerLink colocamos la ruta con parametro del app.module y el paramtro del id del cliente -->
           <td><button class="btn btn-success btn-xs" [routerLink]="['/crearCliente',i.id]"
